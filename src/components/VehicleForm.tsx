@@ -1,10 +1,33 @@
 import { useForm } from "react-hook-form";
 
-export default function VehicleForm({ onAddVehicle }: { onAddVehicle: (data: any) => void }) {
-    const { register, handleSubmit, reset } = useForm();
+interface VehicleFormData {
+    name: string;
+    brand: string;
+    plateNumber: string;
+    transmission: string;
+    category: string;
+}
 
-    const onSubmit = (data: any) => {
-        const newVehicle = {
+interface Vehicle {
+    id: string;
+    name: string;
+    brand: string;
+    plateNumber: string;
+    transmission: string;
+    category: {
+        name: string;
+    };
+}
+
+interface VehicleFormProps {
+    onAddVehicle: (newVehicle: Vehicle) => void;
+}
+
+export default function VehicleForm({ onAddVehicle }: VehicleFormProps) {
+    const { register, handleSubmit, reset } = useForm<VehicleFormData>();
+
+    const onSubmit = (data: VehicleFormData) => {
+        const newVehicle: Vehicle = {
             id: crypto.randomUUID(), 
             name: data.name,
             brand: data.brand,
@@ -20,7 +43,6 @@ export default function VehicleForm({ onAddVehicle }: { onAddVehicle: (data: any
     };
 
     return (
-        // {/* KODE YANG DIUBAH: border-2 border-black */}
         <form onSubmit={handleSubmit(onSubmit)} className="border-2 border-black p-6 rounded-xl bg-white w-full shadow-sm">
             <h2 className="text-lg font-bold mb-6 text-slate-800">Tambah Kendaraan Baru</h2>
             

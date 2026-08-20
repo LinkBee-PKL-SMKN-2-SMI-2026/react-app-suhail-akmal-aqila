@@ -67,30 +67,38 @@ import axios from "axios";
 import VehicleCard from "./components/VehicleCard";
 import VehicleForm from "./components/VehicleForm";
 
+interface Vehicle {
+  id: string;
+  name: string;
+  brand: string;
+  plateNumber: string;
+  transmission: string;
+  category?: {
+    name: string;
+  };
+}
+
 export default function App() {
-  const [vehicles, setVehicles] = useState<any[]>([]);
+  const [vehicles, setVehicles] = useState<Vehicle[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
-  // Fetching data kendaraan dari real API saat pertama kali dibuka
   useEffect(() => {
     axios.get("https://rent-car-pkl.linkbee.id/api/vehicles")
       .then((response) => {
-        // Sesuaikan dengan struktur data dari endpoint API (biasanya response.data.data atau response.data)
         const result = response.data.data || response.data;
         setVehicles(result);
         setIsLoading(false);
       })
-      .catch((err) => {
+      .catch((err: unknown) => {
         setError("Gagal memuat data kendaraan dari server.");
         setIsLoading(false);
         console.error(err);
       });
   }, []);
 
-  // Fungsi menambah kendaraan baru ke state lokal
-  const handleAddVehicle = (newVehicle: any) => {
-    setVehicles((prevVehicles) => [newVehicle, ...prevVehicles]);
+  const handleAddVehicle = (newVehicle: Vehicle) => {
+    setVehicles((prev) => [newVehicle, ...prev]);
   };
 
   return (
@@ -98,32 +106,26 @@ export default function App() {
       <h1 className="text-3xl font-bold mb-8 text-slate-800">Sistem Katalog Rent Car</h1>
 
       <div className="flex flex-col lg:flex-row items-start gap-8">
-        
-        {/* Kolom Form Kiri */}
         <div className="w-full lg:w-1/3">
           <VehicleForm onAddVehicle={handleAddVehicle} />
         </div>
 
-        {/* Kolom Daftar Kendaraan Kanan */}
         <div className="flex-1 w-full">
           <h2 className="text-xl font-bold text-slate-800 mb-4">
             Daftar Kendaraan ({vehicles.length})
           </h2>
 
-          {/* Indikator Loading & Error */}
           {isLoading && <p className="text-slate-500">Memuat data dari API...</p>}
           {error && <p className="text-red-500">{error}</p>}
 
-          {/* Grid Katalog Kendaraan */}
           {!isLoading && !error && (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {vehicles.map((vehicle) => (
-                <VehicleCard key={vehicle.id || crypto.randomUUID()} {...vehicle} />
+                <VehicleCard key={vehicle.id} {...vehicle} />
               ))}
             </div>
           )}
         </div>
-
       </div>
     </div>
   );
