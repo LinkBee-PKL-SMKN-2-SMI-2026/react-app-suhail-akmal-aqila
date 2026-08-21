@@ -1,23 +1,6 @@
 import { useForm } from "react-hook-form";
-
-interface VehicleFormData {
-    name: string;
-    brand: string;
-    plateNumber: string;
-    transmission: string;
-    category: string;
-}
-
-interface Vehicle {
-    id: string;
-    name: string;
-    brand: string;
-    plateNumber: string;
-    transmission: string;
-    category: {
-        name: string;
-    };
-}
+import type { Vehicle } from "../types/Vehide";
+import type { VehicleFormData } from "../types/Vehide";
 
 interface VehicleFormProps {
     onAddVehicle: (newVehicle: Vehicle) => void;

@@ -1,21 +1,12 @@
-interface VehicleProps {
-    id: string | number;
-    name: string;
-    brand: string;
-    plateNumber: string;
-    transmission: string;
-    category?: {
-        name: string;
-    };
-}
+import type { VehicleProps } from "../types/Vehide";
 
 export default function VehicleCard({ name, brand, plateNumber, transmission, category }: VehicleProps) {
-    // KODE YANG DIUBAH: Logika penentuan warna border berdasarkan transmisi
+    //Logika penentuan warna border berdasarkan transmisi
     const isAutomatic = transmission.toUpperCase() === "AUTOMATIC";
     const borderClass = isAutomatic ? "border-blue-500" : "border-red-500";
 
     return (
-        // {/* KODE YANG DIUBAH: Memasukkan variabel borderClass ke dalam className */}
+      
         <div className={`border-2 ${borderClass} p-5 rounded-xl shadow-sm bg-white`}>
             <div className="flex justify-between items-start mb-1">
                 <h2 className="text-lg font-bold text-slate-800">{name}</h2>
