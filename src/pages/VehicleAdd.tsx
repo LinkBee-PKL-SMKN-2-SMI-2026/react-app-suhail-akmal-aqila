@@ -1,37 +1,32 @@
-import { useState } from "react";
 import { useForm } from "react-hook-form";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { TOKEN } from "../App";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { api } from "../utils/api";
 import type { VehicleFormData } from "../types/Vehicle";
 
 export default function VehicleAdd() {
   const { register, handleSubmit, reset } = useForm<VehicleFormData>();
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
 
-  const onSubmit = async (data: VehicleFormData) => {
-    setIsSubmitting(true);
-    try {
-      await axios.post(
-        "https://rent-car-pkl.linkbee.id/api/vehicles",
-        data,
-        { headers: { Authorization: `Bearer ${TOKEN}` } }
-      );
-
+  const addMutation = useMutation({
+    mutationFn: async (data: VehicleFormData) => {
+      await api.post("/vehicles", data);
+    },
+    onSuccess: () => {
       alert("Kendaraan berhasil ditambahkan!");
-      reset(); 
+      reset();
+      queryClient.invalidateQueries({ queryKey: ["vehicles"] });
       navigate("/vehicles");
-    } catch (err: unknown) {
-      if (axios.isAxiosError(err)) {
-        const errorMessage = err.response?.data?.message || "Terjadi kesalahan pada server.";
-        alert(`Gagal: ${errorMessage}`);
-      } else {
-        alert("Gagal: Terjadi kesalahan yang tidak diketahui.");
-      }
-    } finally {
-      setIsSubmitting(false); 
-    }
+    },
+    onError: (err: unknown) => {
+      alert("Gagal menambahkan kendaraan.");
+      console.error(err);
+    },
+  });
+
+  const onSubmit = (data: VehicleFormData) => {
+    addMutation.mutate(data);
   };
 
   return (
@@ -75,9 +70,9 @@ export default function VehicleAdd() {
 
         <button 
           type="submit" 
-          disabled={isSubmitting} 
-          className={`w-full p-2.5 rounded-lg font-semibold text-white transition-colors ${ isSubmitting ? "bg-gray-400 cursor-not-allowed" : "bg-blue-600 hover:bg-blue-700"}`}>
-          {isSubmitting ? "Menyimpan..." : "Simpan Data"}
+          disabled={addMutation.isPending} 
+          className={`w-full p-2.5 rounded-lg font-semibold text-white transition-colors ${addMutation.isPending ? "bg-gray-400 cursor-not-allowed" : "bg-blue-600 hover:bg-blue-700"}`}>
+          {addMutation.isPending ? "Menyimpan..." : "Simpan Data"}
         </button>
       </form>
     </div>
