@@ -9,11 +9,11 @@ export default function MainLayout() {
           <Link 
             to="/vehicles"className="p-3 rounded-lg hover:bg-slate-800 transition-colors font-medium flex items-center gap-2">Daftar Kendaraan</Link>
           <Link 
-            to="/vehicles/new"className="p-3 rounded-lg hover:bg-slate-800 transition-colors font-medium flex items-center gap-2">➕ Tambah Baru</Link>
+            to="/vehicles/new"className="p-3 rounded-lg hover:bg-slate-800 transition-colors font-medium flex items-center gap-2">+ Tambah Baru</Link>
         </nav>
       </aside>
       <main className="flex-1 p-6 md:p-8 overflow-y-auto">
-        <Outlet />
+        <Outlet/>
       </main>
     </div>
   );

@@ -1,6 +1,5 @@
 import axios from "axios";
 import { TOKEN } from "../App";
-// import type { Vehicle } from "../App";
 import type { Vehicle } from "../types/Vehicle";
 
 interface VehicleCardProps extends Vehicle {
